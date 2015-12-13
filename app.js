@@ -76,7 +76,7 @@ router.route('/films')
       if(err)
         res.send(err);
 
-      res.json({ message: 'All films deleted!'});
+      //res.json({ message: 'All films deleted!'});
     });
   });
 
