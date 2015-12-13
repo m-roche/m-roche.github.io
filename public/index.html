@@ -1,36 +1,67 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-  </head>
-  <body>
-    <div ng-app="filmList">
-      <p>Film List</p>
-      <div ng-controller="postFilmCtrl"> 
-        <input ng-model="film_title" placeholder="Enter a film title">
-        <button ng-click="addToList()">Submit</button>
-        <p>{{film_title}}</p>
-      </div>
-      <div ng-controller="getFilmsCtrl">   
-        <li ng-repeat="x in names">
-          {{x.film_name}}
-        </li>
-      </div>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="filmList">
+<head>
+    <!-- META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+    <title>Node Film List</title>
+
+    <!-- STYLE -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+    <style>
+        html                    { overflow-y:scroll; }
+        body                    { padding-top:50px; }
+        #film-list              { margin-bottom:30px; }
+    </style>
+
+    <!-- AngularJS & jQuery -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <script src="core.js"></script>
+
+</head>
+<!-- SET THE CONTROLLER AND GET ALL FILMS -->
+<body ng-controller="mainController">
+    <div class="container">
+
+        <!-- HEADER AND FILM COUNT -->
+        <div class="jumbotron text-center">
+            <h1>Film List <span class="label label-info">{{ films.length }}</span></h1>
+        </div>
+
+        <!-- FILM LIST -->
+        <div id="film-list" class="row">
+            <div class="col-sm-4 col-sm-offset-4">
+
+                <!-- LOOP OVER THE FILMS IN $scope.films -->
+                <div class="checkbox" ng-repeat="film in films">
+                    <label>
+                        <input type="checkbox" ng-click="deleteFilm(film._id)"> {{ film.film_name }}
+                    </label>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FORM TO CREATE FILMS -->
+        <div id="film-form" class="row">
+            <div class="col-sm-8 col-sm-offset-2 text-center">
+                <form>
+                    <div class="form-group">
+
+                        <!-- BIND THIS VALUE TO formData.film_name IN ANGULAR -->
+                        <input type="text" class="form-control input-lg text-center" placeholder="Which film shall I watch next?" ng-model="formData.film_name">
+                    </div>
+
+                    <!-- createFilm() WILL CREATE NEW FILMS -->
+                    <button type="submit" class="btn btn-primary btn-lg" ng-click="createFilm()">Add</button>
+                </form>
+            </div>
+        </div>
+
     </div>
 
-    <script>
-    var app = angular.module('filmList', []);
-
-    app.controller('getFilmsCtrl', function($scope, $http) {
-      $http.get("http://localhost:8080/api/films")
-      .then(function(response) {$scope.names = response.data;});
-    });
-
-    app.controller('postFilmCtrl', function($scope, $http) {
-      //$scope.film_title = "Untitled";
-      $scope.addToList = function() {$http.post("http://localhost:8080/api/films", {film_name: $scope.film_title});
-      };
-    });
-    </script>
-  </body>
+</body>
 </html>
